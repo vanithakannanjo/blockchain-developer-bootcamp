@@ -5,7 +5,7 @@ import "hardhat/console.sol";
 
 
 contract Token{
-	string public name="My token"; 
+	string public name="VK token"; 
 	
 }
 
