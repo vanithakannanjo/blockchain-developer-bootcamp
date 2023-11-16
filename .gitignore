@@ -33,3 +33,10 @@ typechain-types
 cache
 artifacts
 
+#visual studio files
+VSWorkspaceState.json
+project-colors.json
+slnx.sqlite-journal
+.vs/bc2/v17/.suo
+.vs/slnx.sqlite
+
