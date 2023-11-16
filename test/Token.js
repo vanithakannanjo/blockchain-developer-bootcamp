@@ -8,10 +8,14 @@ const tokens = (n) => {
 }
 
 describe('Token Contract Test', () => {
-	let token
+	let token,accounts,deployer
+
 	beforeEach(async () => {		
 		const Token = await ethers.getContractFactory('Token')
-		token = await Token.deploy('VK Token','VKT','1000000')
+		token = await Token.deploy('VK Token', 'VKT', '1000000')
+
+		accounts = await ethers.getSigners()
+		deployer = accounts[0]
 	})
 
 	describe('Deployment', () => {
@@ -30,6 +34,10 @@ describe('Token Contract Test', () => {
 		})
 		it('has correct total supply', async () => {
 			expect(Number(await token.totalSupply())).to.equal(Number(totalSupply))
+		})
+		it('assigns total supply to deployer', async () => {
+			//console.log(deployer);
+			expect(Number(await token.balanceOf(deployer.address))).to.equal(Number(totalSupply))
 		})
     })
 
