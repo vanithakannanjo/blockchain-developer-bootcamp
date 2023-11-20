@@ -1,14 +1,12 @@
-const { assert, expect } = require('chai');
-const { utils } = require('ethers');
-const { parseUnits } = require('ethers/lib/utils');
+const {  expect } = require('chai');
+
 const { ethers } = require('hardhat');
-require("@nomicfoundation/hardhat-chai-matchers")
 
 const tokens = (n) => {
 	return ethers.utils.parseUnits(n.toString(), 'ether')
 }
 
-describe('Token Contract Test', () => {
+describe('Token', () => {
 	let token,accounts,deployer,receiver
 
 	beforeEach(async () => {		
@@ -39,7 +37,7 @@ describe('Token Contract Test', () => {
 			expect(Number(await token.totalSupply())).to.equal(Number(totalSupply))
 		})
 		it('assigns total supply to deployer', async () => {
-			//console.log(deployer);
+		
 			expect(Number(await token.balanceOf(deployer.address))).to.equal(Number(totalSupply))
 		})
     })
@@ -71,12 +69,12 @@ describe('Token Contract Test', () => {
 
 		describe('Failure', () => {
 			it('rejects insufficient balances', async () => {
-				const invalidAmount = tokens(1000)
+       			const invalidAmount = tokens(100000000)
 				await expect(token.connect(deployer).transfer(receiver.address, invalidAmount)).to.be.reverted
 			})
 			it('rejects invalid recipient', async () => {
 				const amount = tokens(100)
-				await expect(token.connect(deployer).transfer('0x2546BcD3c84621e976D8185a91A922aE77ECEc30', amount)).to.be.reverted
+        		await expect(token.connect(deployer).transfer('0x0000000000000000000000000000000000000000', amount)).to.be.reverted
 			})
 
 		})
