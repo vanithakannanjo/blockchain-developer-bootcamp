@@ -7,7 +7,7 @@ const tokens = (n) => {
 }
 
 describe('Token', () => {
-	let token, accounts, deployer, receiver
+  let token, accounts, deployer, receiver, exchange
 
 	beforeEach(async () => {
 		const Token = await ethers.getContractFactory('Token')
@@ -43,8 +43,9 @@ describe('Token', () => {
 		})
 	})
 
-	describe("Sending Tokens", () => {
-		let amount, transaction, result
+
+  describe('Sending Tokens', () => {
+    let amount, transaction, result
 
 		describe('Success', () => {
 			beforeEach(async () => {
@@ -106,7 +107,7 @@ describe('Token', () => {
 
 		describe('Failure', () => {
 			it('reject invalid spenders', async() => {
-				await expect(token.connect(deployer).approve('0x0000000000000000000000000000000000000000', amount))//.to.be.reverted
+				await expect(token.connect(deployer).approve('0x0000000000000000000000000000000000000000', amount)).to.be.reverted
             })
 
         })
@@ -145,11 +146,14 @@ describe('Token', () => {
 				expect(Number(args.value)).to.equal(Number(amount))
 			})
 
-		})
-		describe('Failure', async() => {
-			const invalidAmount = tokens(1000000000)
-			await expect(token.connect(exchange).transferFrom(deployer.address, receiver.address, invalidAmount)).to.be.reverted
-        })
     })
+
+    describe('Failure', async () => {
+      // Attempt to transfer too many tokens
+      const invalidAmount = tokens(100000000) // 100 Million, greater than total supply
+      await expect(token.connect(exchange).transferFrom(deployer.address, receiver.address, invalidAmount)).to.be.reverted
+    })
+
+  })
 
 })
