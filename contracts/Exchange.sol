@@ -11,7 +11,7 @@ contract Exchange{
 	mapping(uint256 => _Order)public orders;
 	uint256 public orderCount;
 	mapping(uint256 => bool) public orderCancelled; // orderid => true/false
-
+	mapping(uint256 => bool) public orderFilled; 
 	event Deposit(
 		address token, 
 		address user, 
@@ -40,11 +40,22 @@ contract Exchange{
 		address tokenGet,
 		uint256 amountGet,
 		address tokenGive, 
-		uint256 amountGive,
+		uint256 amountGive,		
 		uint256 timestamp
 	
 	);
 
+	event Trade(
+		uint256 id,
+		address user,
+		address tokenGet,
+		uint256 amountGet,
+		address tokenGive, 
+		uint256 amountGive,
+		address creator,
+		uint256 timestamp
+	
+	);
 	
 
 	struct _Order{
@@ -103,7 +114,7 @@ contract Exchange{
 		address _tokenGive, 
 		uint256 _amountGive
 	) public {
-		orderCount = orderCount + 1;
+		orderCount++;
 		orders[orderCount] = _Order(
 			orderCount,
 			msg.sender,
@@ -125,7 +136,6 @@ contract Exchange{
 		);
 		
 	}
-
 
 
 	function cancelOrder(
@@ -158,6 +168,11 @@ contract Exchange{
 
 	//Executing Orders 
 	function fillOrder(uint256 _id)public{
+
+		require(_id > 0 && _id <= orderCount,"Order does not exist");
+		require(!orderFilled[_id]);
+		require(!orderCancelled[_id]);
+
 		_Order storage _order = orders[_id];
 
 		_trade(
@@ -168,6 +183,8 @@ contract Exchange{
 			_order.tokenGive,
 			_order.amountGive
 		);
+
+		orderFilled[_order.id]=true;
 	}
 	
 
@@ -196,7 +213,17 @@ contract Exchange{
 			tokens[_tokenGive][msg.sender] + 
 			_amountGive;
 		
-
+		//emit trade event
+		emit Trade (
+			_orderId,
+			msg.sender,
+			_tokenGet,
+			_amountGet,
+			_tokenGive,
+			_amountGive,
+			_user,
+			block.timestamp
+		);
 
 	}
 }
