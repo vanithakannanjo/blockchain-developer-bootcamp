@@ -21,8 +21,8 @@ describe('Token', () => {
 	})
 
 	describe('Deployment', () => {
-		const name = 'VK Token'
-		const symbol = 'VKT'
+		const name = 'DAPP Token'
+		const symbol = 'DAPP'
 		const decimals = '18'
 		const totalSupply = tokens('1000000')
 		it('has correct name', async () => {
