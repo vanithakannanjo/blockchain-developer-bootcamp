@@ -23,10 +23,12 @@ export const provider = (state = {}, action) => {
 
 export const tokens = (state = { loaded: false, contract: null }, action) => {
   switch (action.type) {
-    case 'PROVIDER_LOADED':
+    case 'TOKEN_LOADED':
       return {
         ...state,
-        connection: action.connection,
+        loaded:true,
+        contract: action.token,
+        symbol: action.symbol
       };
 
     default:
