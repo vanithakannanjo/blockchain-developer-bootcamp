@@ -21,14 +21,21 @@ export const provider = (state = {}, action) => {
   }
 };
 
-export const tokens = (state = { loaded: false, contract: null }, action) => {
+export const tokens = (state = { loaded: false, contract: [], symbols:[] }, action) => {
   switch (action.type) {
-    case 'TOKEN_LOADED':
+    case 'TOKEN_1_LOADED':
       return {
         ...state,
         loaded:true,
-        contract: action.token,
-        symbol: action.symbol
+        contracts: [...state.contracts, action.token],
+        symbol: [...state.symbols,action.symbol]
+      };
+    case 'TOKEN_2_LOADED':
+      return {
+        ...state,
+        loaded:true,
+        contracts: [...state.contracts, action.token],
+        symbol: [...state.symbols,action.symbol]
       };
 
     default:

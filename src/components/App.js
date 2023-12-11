@@ -5,7 +5,7 @@ import {
   loadProvider,
   loadNetwork,
   loadAccount,
-  loadToken,
+  loadTokens,
 } from '../store/interactions';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
     const provider = loadProvider(dispatch);
     const chainId = await loadNetwork(provider, dispatch);
     // Token Smart Contract
-    await loadToken(provider, config[chainId].Dapp.address, dispatch);
+    await loadTokens(provider, [config[chainId].Dapp.address,config[chainId].mETH.address,], dispatch);
   };
 
   useEffect(() => {
