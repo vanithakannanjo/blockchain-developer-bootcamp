@@ -28,7 +28,6 @@ function App() {
     });
 
     // Fetch current account & balance from Metamask when changed
-
     window.ethereum.on('accountsChanged', () => {
       loadAccount(provider, dispatch);
     });
