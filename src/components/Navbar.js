@@ -16,6 +16,7 @@ const Navbar = () => {
   };
 
   const networkHandler = async (e) => {
+    console.log('chainid = ', e.target.value);
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: e.target.value }],
@@ -26,23 +27,26 @@ const Navbar = () => {
     <div className="exchange__header grid">
       <div className="exchange__header--brand flex">
         <img src={logo} className="logo" alt="DApp Logo"></img>
-        <h1>DApp Token Exchange</h1>
+        <h1>Test</h1>
       </div>
 
       <div className="exchange__header--networks flex">
         <img src={eth} alt="ETH Logo" className="Eth Logo" />
-        <select
-          name="networks"
-          id="networks"
-          value="{config[chainId] ? `0x${chainId.toString(16)}` : `0`}"
-          onChange={networkHandler}
-        >
-          <option value="0" disabled>
-            Select Network
-          </option>
-          <option value="0xf3">Localhost</option>
-          <option value="0x70">Kovan</option>
-        </select>
+
+        {chainId && (
+          <select
+            name="networks"
+            id="networks"
+            value={config[chainId] ? `0x${chainId.toString(16)}` : `0`}
+            onChange={networkHandler}
+          >
+            <option value="0" disabled>
+              Select Network
+            </option>
+            <option value="0x7A69">Localhost</option>
+            <option value="0xaa36a7">Sepholia</option>
+          </select>
+        )}
       </div>
 
       <div className="exchange__header--account flex">
