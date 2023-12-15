@@ -33,7 +33,7 @@ function App() {
     });
 
     // Load token smart contracts
-    const DApp = config[chainId].DApp;
+    const DApp = config[chainId].Dapp;
     const mETH = config[chainId].mETH;
     await loadTokens(provider, [DApp.address, mETH.address], dispatch);
 

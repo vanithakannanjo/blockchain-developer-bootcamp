@@ -1,9 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
+
 import config from '../config.json';
+
 import { loadTokens } from '../store/interactions';
+
 const Markets = () => {
   const provider = useSelector((state) => state.provider.connection);
   const chainId = useSelector((state) => state.provider.chainId);
+
   const dispatch = useDispatch();
 
   const marketHandler = async (e) => {
@@ -19,22 +23,20 @@ const Markets = () => {
       {chainId && config[chainId] ? (
         <select name="markets" id="markets" onChange={marketHandler}>
           <option
-            value={
-              '${config[chainId].DApp.address}, ${config[chainId].mETH.address}'
-            }
+            value={`${config[chainId].Dapp.address},${config[chainId].mETH.address}`}
           >
             DApp / mETH
           </option>
           <option
-            value={
-              '${config[chainId].DApp.address}, ${config[chainId].mDAI.address}'
-            }
+            value={`${config[chainId].Dapp.address},${config[chainId].mDAI.address}`}
           >
             DApp / mDAI
           </option>
         </select>
       ) : (
-        <div>Not Deployed to Network </div>
+        <div>
+          <p>Not Deployed to Network</p>
+        </div>
       )}
 
       <hr />
