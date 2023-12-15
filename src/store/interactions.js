@@ -52,3 +52,12 @@ export const loadExchange = async (provider, address, dispatch) => {
 
   return exchange;
 };
+
+export const loadBalances = async (exchange, tokens, account, dispatch) => {
+  let balance = ethers.utils.formatUnits(
+    await tokens[0].balanceOf(account),
+    18
+  );
+
+  dispatch({ type: 'TOKEN_1_BALANCE_LOADED', balance });
+};
