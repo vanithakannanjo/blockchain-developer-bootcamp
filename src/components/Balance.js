@@ -1,7 +1,21 @@
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import dapp from '../assets/dapp.svg';
+import { loadBalances } from '../store/interactions';
 const Balance = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state.provider.account);
+  const exchange = useSelector((state) => state.exchange.contract);
+  const tokens = useSelector((state) => state.tokens.contracts);
   const symbols = useSelector((state) => state.tokens.symbols);
+  const tokenBalances = useSelector((state) => state.tokens.balances);
+
+  useEffect(() => {
+    if (exchange && tokens[0] && tokens[1] && account) {
+      loadBalances(exchange, tokens, account, dispatch);
+    }
+  }, [exchange, tokens, account]);
+
   return (
     <div className="component exchange__transfers">
       <div className="component__header flex-between">
@@ -21,6 +35,11 @@ const Balance = () => {
           <br />
           <img src={dapp} alt="Token Logo" />
           {symbols && symbols[0]}
+        </p>
+        <p>
+          <small>Wallet</small>
+          <br />
+          {tokenBalances && tokenBalances[0]}
         </p>
         <form>
           <label htmlFor="token0"></label>
