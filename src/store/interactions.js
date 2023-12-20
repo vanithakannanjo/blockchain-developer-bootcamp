@@ -75,3 +75,24 @@ export const loadBalances = async (exchange, tokens, account, dispatch) => {
   );
   dispatch({ type: 'EXCHANGE_TOKEN_2_BALANCE_LOADED', balance });
 };
+
+export const transferTokens = async (
+  provider,
+  exchange,
+  transferType,
+  token,
+  amount,
+  dispatch
+) => {
+  let transaction;
+  const signer = await provider.getSigner();
+  const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 18);
+
+  await token.connect(signer).approve(exchange.address, amountToTransfer);
+  await transaction.wait();
+
+  transaction = await exchange
+    .connect(signer)
+    .depositToken(token.address, amountToTransfer);
+  await transaction.wait();
+};

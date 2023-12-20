@@ -1,14 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dapp from '../assets/dapp.svg';
-import { loadBalances } from '../store/interactions';
+import { loadBalances, transferTokens } from '../store/interactions';
 const Balance = () => {
+  const [token1TransferAmount, setToken1TransferAmount] = useState(0);
+
   const dispatch = useDispatch();
+  const provider = useSelector((state) => state.provider.connection);
   const account = useSelector((state) => state.provider.account);
   const exchange = useSelector((state) => state.exchange.contract);
+  const exchangeBalances = useSelector((state) => state.exchange.balances);
   const tokens = useSelector((state) => state.tokens.contracts);
   const symbols = useSelector((state) => state.tokens.symbols);
   const tokenBalances = useSelector((state) => state.tokens.balances);
+
+  const amountHandler = (e, token) => {
+    if (token.address === tokens[0].address) {
+      setToken1TransferAmount(e.target.value);
+    }
+  };
+
+  const depositHandler = (e, token) => {
+    e.preventDefault();
+    if (token.address === tokens[0].address) {
+      transferTokens(
+        provider,
+        exchange,
+        'Deposit',
+        token,
+        token1TransferAmount,
+        dispatch
+      );
+    }
+  };
 
   useEffect(() => {
     if (exchange && tokens[0] && tokens[1] && account) {
@@ -29,24 +53,36 @@ const Balance = () => {
       {/* Deposit/Withdraw Component 1 (DApp) */}
 
       <div className="exchange__transfers--form">
-        <div className="flex-between"></div>
-        <p>
-          <small>Token</small>
-          <br />
-          <img src={dapp} alt="Token Logo" />
-          {symbols && symbols[0]}
-        </p>
-        <p>
-          <small>Wallet</small>
-          <br />
-          {tokenBalances && tokenBalances[0]}
-        </p>
-        <form>
-          <label htmlFor="token0"></label>
-          <input type="text" id="token0" placeholder="0.0000" />
+        <div className="flex-between">
+          <p>
+            <small>Token</small>
+            <br />
+            <img src={dapp} alt="Token Logo" />
+            {symbols && symbols[0]}
+          </p>
+          <p>
+            <small>Wallet</small>
+            <br />
+            {tokenBalances && tokenBalances[0]}
+          </p>
+          <p>
+            <small>Exchange</small>
+            <br />
+            {exchangeBalances && exchangeBalances[0]}
+          </p>
+        </div>
+
+        <form onSubmit={(e) => depositHandler(e, tokens[0])}>
+          <label htmlFor="token0">{symbols && symbols[0]} Amount</label>
+          <input
+            type="text"
+            id="token0"
+            placeholder="0.0000"
+            onChange={(e) => amountHandler(e, tokens[0])}
+          />
 
           <button className="button" type="submit">
-            <span></span>
+            <span>Deposit</span>
           </button>
         </form>
       </div>
