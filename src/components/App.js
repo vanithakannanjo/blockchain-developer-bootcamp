@@ -8,58 +8,67 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
+  subscribeToEvents
 } from '../store/interactions';
 
-import Navbar from './Navbar';
-import Markets from './Markets';
-import Balance from './Balance';
+import Navbar from './Navbar'
+import Markets from './Markets'
+import Balance from './Balance'
+
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const loadBlockchainData = async () => {
     // Connect Ethers to blockchain
-    const provider = loadProvider(dispatch);
+    const provider = loadProvider(dispatch)
 
-    // Fetch current network's chainId (e.g. hardhat: 31337, kovan: 42)
+    // Fetch current network's chainId (e.g. hardhat: 31337, Sepolia: 11155111)
     const chainId = await loadNetwork(provider, dispatch);
 
     // Reload page when network changes
     window.ethereum.on('chainChanged', () => {
-      window.location.reload();
-    });
+      window.location.reload()
+    })
 
     // Fetch current account & balance from Metamask when changed
     window.ethereum.on('accountsChanged', () => {
-      loadAccount(provider, dispatch);
-    });
+      loadAccount(provider, dispatch)
+    })
 
     // Load token smart contracts
-    const DApp = config[chainId].Dapp;
-    const mETH = config[chainId].mETH;
-    await loadTokens(provider, [DApp.address, mETH.address], dispatch);
+    const DApp = config[chainId].DApp
+    const mETH = config[chainId].mETH
+    await loadTokens(provider, [DApp.address, mETH.address], dispatch)
 
     // Load exchange smart contract
-    const exchangeConfig = config[chainId].exchange;
-    await loadExchange(provider, exchangeConfig.address, dispatch);
-  };
+    const exchangeConfig = config[chainId].exchange
+    const exchange = await loadExchange(provider, exchangeConfig.address, dispatch)
+
+    // Listen to events
+    subscribeToEvents(exchange, dispatch)
+  }
 
   useEffect(() => {
-    loadBlockchainData();
-  });
+    loadBlockchainData()
+  })
 
   return (
     <div>
+
       <Navbar />
 
-      <main className="exchange grid">
-        <section className="exchange__section--left grid">
+      <main className='exchange grid'>
+        <section className='exchange__section--left grid'>
+
           <Markets />
 
           <Balance />
 
           {/* Order */}
+
         </section>
-        <section className="exchange__section--right grid">
+        <section className='exchange__section--right grid'>
+
           {/* PriceChart */}
 
           {/* Transactions */}
@@ -67,10 +76,12 @@ function App() {
           {/* Trades */}
 
           {/* OrderBook */}
+
         </section>
       </main>
 
       {/* Alert */}
+
     </div>
   );
 }
