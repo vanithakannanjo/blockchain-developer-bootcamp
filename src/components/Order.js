@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeBuyOrder } from '../store/interactions';
 
 const Order = () => {
   const [isBuy, setIsBuy] = useState(true);
@@ -6,6 +8,10 @@ const Order = () => {
   const [amount, setAmount] = useState(0);
   const [price, setPrice] = useState(0);
 
+  const provider = useSelector((state) => state.provider.connection);
+  const tokens = useSelector((state) => state.tokens.contracts);
+  const exchange = useSelector((state) => state.exchange.contracts);
+  const dispatch = useDispatch();
   const buyRef = useRef(null);
   const sellRef = useRef(null);
 
@@ -22,7 +28,7 @@ const Order = () => {
   };
   const buyHandler = (e) => {
     e.preventDefault();
-    console.log('buyhandler');
+    makeBuyOrder(provider, exchange, tokens, { amount, price }, dispatch);
     setAmount(0);
     setPrice(0);
   };

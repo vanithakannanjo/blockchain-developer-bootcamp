@@ -72,6 +72,10 @@ const DEFAULT_EXCHANGE_STATE = {
   transaction: {
     isSuccessful: false,
   },
+  allOrders: {
+    loaded: false,
+    data: [],
+  },
   events: [],
 };
 
@@ -141,6 +145,22 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
           isSuccessful: false,
         },
       };
+
+    case 'NEW_ORDER_SUCCESS':
+      return {
+        ...state,
+        allOrders: {
+          ...state.allOrders,
+          data: [...state.allOrders.data, action.order],
+        },
+        transaction: {
+          transactionType: 'New Order',
+          isPending: false,
+          isSuccessful: true,
+        },
+        events: [action.event, ...state.events],
+      };
+
     case 'NEW_ORDER_FAIL':
       return {
         ...state,

@@ -61,6 +61,23 @@ export const subscribeToEvents = (exchange, dispatch) => {
   exchange.on('Withdraw', (token, user, amount, balance, event) => {
     dispatch({ type: 'TRANSFER_SUCCESS', event });
   });
+
+  exchange.on(
+    'Order',
+    (
+      id,
+      user,
+      tokenGet,
+      amountGet,
+      tokenGive,
+      amountGive,
+      timestamp,
+      event
+    ) => {
+      const order = event.args;
+      dispatch({ type: 'NEW_ORDER_SUCCESS', order, event });
+    }
+  );
 };
 
 // ------------------------------------------------------------------------------
